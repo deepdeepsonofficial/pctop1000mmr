@@ -13,6 +13,7 @@ const zones = {
   ps5: { name: 'PS5 Standard', count: 2, prefix: 'P', price: { 1: 350, 3: 900, 5: 1400, 9: 1800 } },
   ps5vip: { name: 'PS5 VIP', count: 2, prefix: 'PV', price: { 1: 500, 3: 1300, 5: 2000, 9: 2600 } }
 };
+// Обновляем название, стоимость и выделение кнопок.
 function update() {
   document.querySelector('#summary-zone').textContent = zones[zone.value].name;
   document.querySelector('#total').textContent = zones[zone.value].price[pack.value] + ' ₽';
@@ -26,6 +27,8 @@ function update() {
   }
   message.textContent = '';
 }
+
+// Создаём кнопки игровых мест.
 function drawSeats() {
   seats.replaceChildren();
   selected = '';
@@ -37,19 +40,25 @@ function drawSeats() {
     button.setAttribute('aria-pressed', 'false');
     button.onclick = () => {
       selected = button.textContent;
-      for (const item of seats.querySelectorAll('button')) item.setAttribute('aria-pressed', item === button);
+      for (const item of seats.querySelectorAll('button')) {
+        item.setAttribute('aria-pressed', item === button);
+      }
       update();
     };
     seats.append(button);
   }
   update();
 }
+
+// Обрабатываем выбор зоны и пакета.
 form.onclick = event => {
   const button = event.target.closest('[data-field]');
   if (!button) return;
   form.elements[button.dataset.field].value = button.dataset.value;
   if (button.dataset.field === 'zone') drawSeats(); else update();
 };
+
+// Проверяем форму и показываем пример заявки.
 form.onsubmit = event => {
   event.preventDefault();
   if (!selected) message.textContent = 'Выбери место.';
